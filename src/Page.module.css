@@ -3223,13 +3223,13 @@
   font-size: 9px;
   line-height: 1.45;
 }
-.experienceStatus i {
+/* .experienceStatus i {
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: #5be8ed;
   box-shadow: 0 0 8px #53d8e899;
-}
+} */
 .experienceDetails {
   grid-area: details;
   max-width: 730px;
