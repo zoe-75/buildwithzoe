@@ -1046,7 +1046,7 @@ function DetailModal({
                   </a>
                   {detail.item.liveUrl && (
                     <a className={styles.secondaryButton} href={detail.item.liveUrl} target="_blank" rel="noopener noreferrer">
-                      Visit project <ExternalLink size={16} />
+                      {liveActionLabel(detail.item)} <ExternalLink size={16} aria-hidden="true" />
                     </a>
                   )}
                 </div>
@@ -1241,6 +1241,12 @@ function statusLabel(status: ProjectStatus) {
   return "In Development";
 }
 
+function liveActionLabel(project: Project) {
+  if (project.id === "brm") return "View Live App";
+  if (project.statusType === "pitch") return "View Live Demo";
+  return "Visit Live Website";
+}
+
 function ArchiveCard({ project, index }: { project: Project; index: number }) {
   return (
     <Reveal delay={(index % 2) * 0.08}>
@@ -1336,6 +1342,13 @@ export function ProjectCaseStudy({ slug }: { slug: string }) {
             <span>{project.status}</span>
             {project.focus.map((tag) => <span key={tag}>{tag}</span>)}
           </div>
+          {project.liveUrl && (
+            <div className={styles.caseActions}>
+              <a className={`${styles.secondaryButton} ${styles.caseLiveAction}`} href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                {liveActionLabel(project)} <ExternalLink size={16} aria-hidden="true" />
+              </a>
+            </div>
+          )}
         </motion.header>
         <motion.div className={styles.caseHero} initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.6 }}>
           <ProjectVisual project={project} />

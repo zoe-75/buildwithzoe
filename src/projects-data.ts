@@ -43,7 +43,7 @@ const liveUrlsById: Record<string, string> = {
   brm: "https://brmsummary.netlify.app",
   adire: "https://adire.netlify.app",
   arn: "https://arnautoservice.vercel.app",
-  camcornea: "https://concepts.netlify.app",
+  camcornea: "https://camcornea-concepts.netlify.app/",
   "elegance-market": "https://elegance-market.netlify.app",
   "fab-ventures": "https://fabventures.netlify.app",
   "jara-black-soap": "https://jara-blacksoap.netlify.app",
