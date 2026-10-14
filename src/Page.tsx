@@ -59,11 +59,11 @@ import {
   FaXTwitter,
 } from "react-icons/fa6";import {
   identity,
+  experiences,
   notes,
   principles,
   services,
   tools,
-  experiences,
   type Note,
 } from "./portfolio-content";
 import { projects, type Project, type ProjectStatus } from "./projects-data";
@@ -86,24 +86,20 @@ function Reveal({
   children,
   className = "",
   delay = 0,
-  distance = 26,
-  duration = 0.72,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
-  distance?: number;
-  duration?: number;
 }) {
   const reduced = useReducedMotion();
   return (
     <motion.div
       className={className}
-      initial={reduced ? false : { opacity: 0, y: distance }}
+      initial={reduced ? false : { opacity: 0, y: 26 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.12, margin: "0px 0px -35px 0px" }}
       transition={{
-        duration: reduced ? 0 : duration,
+        duration: reduced ? 0 : 0.72,
         ease: [0.22, 1, 0.36, 1],
         delay,
       }}
@@ -636,6 +632,11 @@ function Projects({ onSelect }: { onSelect: (detail: Detail) => void }) {
                 <ArrowUpRight size={21} />
               </div>
               <p className={styles.projectShort}>{project.short}</p>
+              <div className={styles.projectTags}>
+                {project.focus.map((tag) => (
+                  <span key={tag}>{tag}</span>
+                ))}
+              </div>
             </motion.button>
           </Reveal>
         ))}
@@ -735,8 +736,6 @@ function WorkExperience() {
             key={item.id}
             className={styles.experienceEntry}
             delay={index * 0.07}
-            distance={14}
-            duration={0.5}
           >
             <p className={styles.experienceCompany}>{item.company}</p>
             <h3 className={styles.experienceRole}>{item.role}</h3>
@@ -756,11 +755,11 @@ function WorkExperience() {
                   <li key={contribution}>{contribution}</li>
                 ))}
               </ul>
-              {item.projectUrl && (
+              {/* {item.projectUrl && (
                 <a className={styles.experienceProject} href={item.projectUrl}>
                   View Project <ArrowRight size={15} />
                 </a>
-              )}
+              )} */}
             </div>
           </Reveal>
         ))}
@@ -1052,7 +1051,7 @@ function DetailModal({
                   </a>
                   {detail.item.liveUrl && (
                     <a className={styles.secondaryButton} href={detail.item.liveUrl} target="_blank" rel="noopener noreferrer">
-                      {liveActionLabel(detail.item)} <ExternalLink size={16} />
+                      Visit project <ExternalLink size={16} />
                     </a>
                   )}
                 </div>
@@ -1247,12 +1246,6 @@ function statusLabel(status: ProjectStatus) {
   return "In Development";
 }
 
-function liveActionLabel(project: Project) {
-  if (project.id === "brm") return "View Live App";
-  if (project.statusType === "pitch") return "View Live Demo";
-  return "Visit Live Website";
-}
-
 function ArchiveCard({ project, index }: { project: Project; index: number }) {
   return (
     <Reveal delay={(index % 2) * 0.08}>
@@ -1274,6 +1267,7 @@ function ArchiveCard({ project, index }: { project: Project; index: number }) {
         </div>
         <div className={styles.projectTitleRow}><h3>{project.title}</h3><ArrowUpRight size={21} /></div>
         <p className={styles.projectShort}>{project.short}</p>
+        {project.focus.length > 0 && <div className={styles.projectTags}>{project.focus.map((tag) => <span key={tag}>{tag}</span>)}</div>}
       </motion.a>
     </Reveal>
   );
@@ -1348,13 +1342,6 @@ export function ProjectCaseStudy({ slug }: { slug: string }) {
             <span>{project.status}</span>
             {project.focus.map((tag) => <span key={tag}>{tag}</span>)}
           </div>
-          {project.liveUrl && (
-            <div className={styles.caseActions}>
-              <a className={`${styles.secondaryButton} ${styles.caseLiveAction}`} href={project.liveUrl} target="_blank" rel="noopener noreferrer">
-                {liveActionLabel(project)} <ExternalLink size={16} />
-              </a>
-            </div>
-          )}
         </motion.header>
         <motion.div className={styles.caseHero} initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08, duration: 0.6 }}>
           <ProjectVisual project={project} />
