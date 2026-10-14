@@ -312,9 +312,9 @@ function Hero() {
           <span className={styles.tickerPill} /> WHAT I WORK ON
         </span>
         <strong>WEB APPLICATIONS</strong>
-        <span className={styles.tickerStar}>✳</span>
+        <span className={styles.tickerStar}></span>
         <strong>INTERNAL TOOLS</strong>
-        <span className={styles.tickerStar}>✳</span>
+        <span className={styles.tickerStar}></span>
         <strong>AUTOMATION</strong>
       </Reveal>
     </section>
