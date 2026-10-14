@@ -632,11 +632,6 @@ function Projects({ onSelect }: { onSelect: (detail: Detail) => void }) {
                 <ArrowUpRight size={21} />
               </div>
               <p className={styles.projectShort}>{project.short}</p>
-              <div className={styles.projectTags}>
-                {project.focus.map((tag) => (
-                  <span key={tag}>{tag}</span>
-                ))}
-              </div>
             </motion.button>
           </Reveal>
         ))}
@@ -1267,7 +1262,6 @@ function ArchiveCard({ project, index }: { project: Project; index: number }) {
         </div>
         <div className={styles.projectTitleRow}><h3>{project.title}</h3><ArrowUpRight size={21} /></div>
         <p className={styles.projectShort}>{project.short}</p>
-        {project.focus.length > 0 && <div className={styles.projectTags}>{project.focus.map((tag) => <span key={tag}>{tag}</span>)}</div>}
       </motion.a>
     </Reveal>
   );
