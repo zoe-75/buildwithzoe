@@ -65,16 +65,16 @@
   padding: 0;
 }
 .floatingContactLink {
-  min-width: 132px;
-  min-height: 44px;
+  min-width: 100px;
+  min-height: 40px;
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
   gap: 9px;
-  padding: 10px 13px;
+  padding: 6px 6px;
   border: 1px solid transparent;
   border-radius: 10px;
-  font: 600 14px/1.2 var(--font-body);
+  font: 600 12px/1.2 var(--font-body);
   text-decoration: none;
   white-space: nowrap;
   transition:
