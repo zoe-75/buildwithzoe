@@ -14,7 +14,7 @@ import {
 } from "motion/react";
 import {
   ArrowDown,
-  ArrowDownRight,
+
   ArrowLeft,
   ArrowRight,
   ArrowUpRight,
@@ -60,6 +60,7 @@ import {
 } from "react-icons/fa6";import {
   identity,
   experiences,
+  heroStatistics,
   notes,
   principles,
   services,
@@ -262,61 +263,36 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.88, delay: 0.13, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span>
-            I BUILD <em className={styles.heroMuted}>SOFTWARE</em>
+          <span className={styles.heroLine}>I BUILD SOFTWARE</span>
+          <span className={styles.heroLine}>
+            <em className={styles.heroMuted}>THAT </em>
+            <em className={styles.heroAccent}>SOLVES </em>
+            <em className={styles.heroMuted}>REAL</em>
           </span>
-          <span>
-            THAT <em className={styles.heroAccent}>SOLVES</em> REAL
-          </span>
-          <span className={styles.heroLast}>
-            BUSINESS <em className={styles.heroMuted}>PROBLEMS</em><span className={styles.heroPeriod}>.</span>
+          <span className={styles.heroLine + ' ' + styles.heroLast}>
+            BUSINESS PROBLEMS<span className={styles.heroPeriod}>.</span>
           </span>
         </motion.h1>
-        <motion.div
-          className={styles.heroAfterTitle}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-        >
-          <span className={styles.heroPlus}>＋</span>
-          <span>
-            BUILDING USEFUL THINGS
-            <br />
-            FOR AN INCREASINGLY DIGITAL WORLD
-          </span>
-        </motion.div>
       </div>
       <Reveal delay={0.12} className={styles.heroDescriptionRow}>
         <div className={styles.heroDescription}>
-          <span className={styles.descriptionMarker}>↳</span>
+          {/* <span className={styles.descriptionMarker}>↳</span> */}
           <p>{identity.introduction}</p>
         </div>
-        <a
-          href="#projects"
-          className={styles.heroCircleCta}
-          aria-label="Scroll to selected work"
-        >
-          <ArrowDownRight size={25} strokeWidth={1.6} />
-        </a>
       </Reveal>
       <Reveal delay={0.14} className={styles.heroActions}>
         <a className={styles.primaryButton} href="#projects">
           Explore selected work <ArrowUpRight size={19} />
         </a>
-        <a className={styles.secondaryButton} href="#contact">
-          Let's talk about your idea <ArrowRight size={17} />
-        </a>
       </Reveal>
-      <Reveal className={styles.heroTicker}>
-        <span>
-          <span className={styles.tickerPill} /> WHAT I WORK ON
-        </span>
-        <strong>WEB APPLICATIONS</strong>
-        <span className={styles.tickerStar}></span>
-        <strong>INTERNAL TOOLS</strong>
-        <span className={styles.tickerStar}></span>
-        <strong>AUTOMATION</strong>
-      </Reveal>
+      <div className={styles.heroStats}>
+        {heroStatistics.map((stat) => (
+          <div className={styles.heroStat} key={stat.label}>
+            <strong>{stat.value}</strong>
+            <span>{stat.label}</span>
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
@@ -598,7 +574,7 @@ function Projects({ onSelect }: { onSelect: (detail: Detail) => void }) {
             Work with a <span>reason to exist.</span>
           </>
         }
-        description="A mix of business systems, product engineering, and practical problem-solving. No invented numbers, no filler."
+        description='Selected work across product engineering, internal tools, websites, and developer tooling.'
       />
       <div className={styles.projectGrid}>
         {featuredProjects.map((project, idx) => (
@@ -667,9 +643,8 @@ function Focus() {
           <span>THE APPROACH</span>
         </div>
         <p>
-          I'd rather understand <em>why</em> something needs to exist than rush
-          to build another feature. Great software makes complex work feel
-          simpler.
+          I start with <em>why</em> something needs to exist, then build the
+          simplest system that makes the work clearer.
         </p>
         {/* <div className={styles.focusDecoration}>[ THINK → DESIGN → BUILD ]</div> */}
       </Reveal>
@@ -684,9 +659,8 @@ function Focus() {
           </span>
           <h3>KRA8T</h3>
           <p>
-            Working with a great team on a career-growth product. Building the
-            foundations for authentication, learning roadmaps, and the
-            experience that connects learning to demonstrated work.
+            Building KRA8T's authentication, learning roadmaps, and
+            project-to-portfolio flow with the team.
           </p>
           <div className={styles.currentStack}>
             <span>PRODUCT ENGINEERING</span>
@@ -723,7 +697,7 @@ function WorkExperience() {
             Where I&apos;ve <span>worked.</span>
           </>
         }
-        description="From building digital experiences to supporting business operations and developing software systems, each role has shaped how I approach solving problems with technology."
+        description='Experience across software development, web delivery, and business operations.'
       />
       <div className={styles.experienceList}>
         {experiences.map((item, index) => (
@@ -750,11 +724,24 @@ function WorkExperience() {
                   <li key={contribution}>{contribution}</li>
                 ))}
               </ul>
-              {/* {item.projectUrl && (
-                <a className={styles.experienceProject} href={item.projectUrl}>
-                  View Project <ArrowRight size={15} />
-                </a>
-              )} */}
+              <div className={styles.experienceActions}>
+                {item.companyUrl && (
+                  <a
+                    className={styles.experienceAction}
+                    href={item.companyUrl}
+                    aria-label={'Visit ' + item.company + ' website'}
+                    target='_blank'
+                    rel={['noopener', 'noreferrer'].join(String.fromCharCode(32))}
+                  >
+                    Visit company website <ArrowUpRight size={15} aria-hidden />
+                  </a>
+              )}
+                {item.projectUrl && (
+                  <a className={styles.experienceAction} href={item.projectUrl}>
+                    View Project <ArrowRight size={15} aria-hidden />
+                  </a>
+                )}
+            </div>
             </div>
           </Reveal>
         ))}
@@ -785,7 +772,7 @@ function Toolbox() {
             The tools change. <span>The thinking stays.</span>
           </>
         }
-        description="Tools I use across frontend development, backend systems, databases, and integration work."
+        description='Tools across frontend, backend, databases, and integrations.'
       />
       <div className={styles.toolsGrid}>
         {tools.map((tool, index) => (
@@ -824,7 +811,7 @@ function Notes({ onSelect }: { onSelect: (detail: Detail) => void }) {
             Thoughts from <span>behind the screen.</span>
           </>
         }
-        description="A place for what I'm studying, building, questioning, and learning about software and business."
+        description='Notes on software, systems, and business.'
       />
       <div className={styles.notesList}>
         {notes.map((note, idx) => (
@@ -849,6 +836,9 @@ function Notes({ onSelect }: { onSelect: (detail: Detail) => void }) {
                 <ArrowUpRight size={21} />
               </span>
 
+              <span className={styles.noteReadMore} aria-hidden>
+                Read More <ArrowRight size={15} aria-hidden />
+              </span>
             </button>
           </Reveal>
         ))}
@@ -931,7 +921,7 @@ function Contact() {
             href={`mailto:${email}`}
             icon={<SiGmail size={25} />}
             title="Send an email"
-            description="For project inquiries, collaborations, and opportunities."
+            description='For project inquiries and collaborations.'
             missingLabel="Add a public email address in portfolio-content.ts"
           />
           <ContactAction
@@ -939,7 +929,7 @@ function Contact() {
             href={whatsappHref}
             icon={<FaWhatsapp size={25} />}
             title="Chat on WhatsApp"
-            description="Prefer a quick conversation? Let's talk directly."
+            description='Prefer a quick conversation? Message me directly.'
             missingLabel="Add a WhatsApp URL or phone number in portfolio-content.ts"
             external
           />

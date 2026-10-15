@@ -9,7 +9,7 @@ export const identity = {
   role: 'Software developer & product builder',
   location: 'Based in Nigeria · Working on the web',
   headline: ['SOFTWARE', 'THAT SOLVES', 'REAL PROBLEMS.'],
-  introduction: 'I build web applications, internal tools, and automation that help businesses run better — thoughtful software for work that matters.',
+  introduction: 'I build web applications, internal tools and practical digital solutions for businesses.',
   bio: 'Developer by craft. Problem-solver by instinct. I build products and systems at the intersection of engineering and business.',
   email: 'elijah7525@gmail.com',
   github: 'https://github.com/zoe-75',
@@ -17,6 +17,12 @@ export const identity = {
   whatsapp: '+234 916 520 1092',
   linkedin: 'https://www.linkedin.com/in/zoe-elijah',
 }
+
+export const heroStatistics = [
+  { value: '+2', label: 'YEARS OF EXPERIENCE' },
+  { value: '+10', label: 'DELIVERED PROJECTS' },
+  { value: '+13', label: 'WORLDWIDE CLIENTS' },
+] as const
 
 export type Project = {
   id: string
@@ -70,10 +76,10 @@ export const projects: Project[] = [
 ]
 
 export const services = [
-  { number: '01', title: 'Web applications', desc: 'Purpose-built web platforms and software products with clear user journeys and dependable backends.', tags: 'PRODUCTS / SAAS / PLATFORMS', icon: 'app' },
-  { number: '02', title: 'Internal tools', desc: 'Dashboards, admin systems, and reporting tools that turn scattered information into usable workflows.', tags: 'DASHBOARDS / OPERATIONS', icon: 'chart' },
-  { number: '03', title: 'Workflow automation', desc: 'Reducing repetitive manual steps by connecting services, data, and reliable background processes.', tags: 'AUTOMATION / INTEGRATIONS', icon: 'flow' },
-  { number: '04', title: 'Business websites', desc: 'Distinctive, fast, responsive websites that explain what a business offers and what customers should do next.', tags: 'WEB / CONVERSION', icon: 'globe' },
+  { number: '01', title: 'Web applications', desc: 'Web platforms and products with clear user journeys and dependable backends.', tags: 'PRODUCTS / SAAS / PLATFORMS', icon: 'app' },
+  { number: '02', title: 'Internal tools', desc: 'Dashboards, admin systems, and reporting tools for usable workflows.', tags: 'DASHBOARDS / OPERATIONS', icon: 'chart' },
+  { number: '03', title: 'Workflow automation', desc: 'Connect services and data to reduce repetitive manual work.', tags: 'AUTOMATION / INTEGRATIONS', icon: 'flow' },
+  { number: '04', title: 'Business websites', desc: 'Fast, responsive websites that clarify an offer and guide customers to the next step.', tags: 'WEB / CONVERSION', icon: 'globe' },
 ] as const
 
 export const principles = [
@@ -94,6 +100,7 @@ export type Experience = {
   isCurrent: boolean
   status?: string
   projectUrl?: string
+  companyUrl?: string
 }
 
 export const experiences: Experience[] = [
@@ -102,7 +109,7 @@ export const experiences: Experience[] = [
     company: 'KRA8T Africa',
     role: 'Software Developer',
     period: '2026 – Present',
-    description: 'Contributing to the development of KRA8T, a software platform focused on structured learning, practical projects, and career development.',
+    description: 'Contributing to KRA8T, a platform for structured learning, practical projects, and career development.',
     contributions: [
       'Developing and implementing application functionality.',
       'Working on backend systems and authentication flows.',
@@ -118,7 +125,7 @@ export const experiences: Experience[] = [
     company: 'Mahilla Digital Consult',
     role: 'Web Developer',
     period: '2026 – Present',
-    description: 'Designed, developed, and delivered Mahilla Digital Consult\'s corporate website, establishing its professional digital presence and helping prospective clients discover the organization\'s services.',
+    description: 'Built Mahilla Digital Consult\'s corporate website to present its services and support client enquiries.',
     contributions: [
       'Website design and development.',
       'Responsive frontend implementation.',
@@ -127,7 +134,8 @@ export const experiences: Experience[] = [
     ],
     isCurrent: true,
     status: 'Ongoing organizational involvement',
-    projectUrl: '/projects/mahilla-digital-consult',
+    
+    companyUrl: 'https://mahilladigitalconsult.netlify.app/',
   },
   {
     id: 'moniepoint-microfinance-bank',
@@ -135,7 +143,7 @@ export const experiences: Experience[] = [
     role: 'Technical Assistant & Personal Assistant to Cluster Manager',
     period: '2025 – 2026',
     periodNote: 'Dates to confirm',
-    description: 'Provided technical and administrative support to a cluster manager, gaining practical experience with business operations, coordination, reporting, and operational workflows.',
+    description: 'Supported a cluster manager with technical, administrative, reporting, and operational work.',
     contributions: [
       'Technical and administrative assistance.',
       'Support for operational coordination.',
@@ -143,6 +151,7 @@ export const experiences: Experience[] = [
       'Practical understanding of organizational workflows.',
     ],
     isCurrent: false,
+    companyUrl: 'https://www.moniepoint.com/',
   },
   {
     id: 'success-world-of-technologies',
@@ -150,7 +159,7 @@ export const experiences: Experience[] = [
     role: 'Web Development Intern',
     period: '2024 – 2025',
     periodNote: 'Dates to confirm',
-    description: 'Developed foundational experience in web development through practical learning, implementation, and exposure to professional development workflows.',
+    description: 'Built foundational web-development experience through practical implementation and professional workflows.',
     contributions: [
       'Web development practice.',
       'Frontend implementation.',
