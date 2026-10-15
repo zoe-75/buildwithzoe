@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img" aria-labelledby="title">
+  <title id="title">Gmail</title>
+  <path d="M3 18V4l9 7 9-7v14" fill="none" stroke="#4285F4" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M3 4l9 7" fill="none" stroke="#EA4335" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M12 11l9-7" fill="none" stroke="#FBBC04" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M21 4v14" fill="none" stroke="#34A853" stroke-width="2.6" stroke-linecap="round"/>
+</svg>

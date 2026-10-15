@@ -23,6 +23,8 @@ import {
   BriefcaseBusiness,
   Check,
   Code2,
+  ChevronDown,
+  ChevronUp,
   Database,
   ExternalLink,
   Flame,
@@ -619,7 +621,7 @@ function Projects({ onSelect }: { onSelect: (detail: Detail) => void }) {
         </span>
         <div className={styles.projectsAfterActions}>
           <a href="/projects">View All Projects <ArrowUpRight size={16} /></a>
-          <a href="#contact">Have a problem worth solving? <ArrowUpRight size={16} /></a>
+          {/* <a href="#contact">Have a problem worth solving? <ArrowUpRight size={16} /></a> */}
         </div>
       </Reveal>
     </section>
@@ -689,6 +691,54 @@ function Focus() {
 }
 
 function WorkExperience() {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const renderExperience = (item: (typeof experiences)[number], index: number) => (
+    <Reveal
+      key={item.id}
+      className={styles.experienceEntry}
+      delay={index * 0.07}
+    >
+      <p className={styles.experienceCompany}>{item.company}</p>
+      <h3 className={styles.experienceRole}>{item.role}</h3>
+      <div className={styles.experienceMeta}>
+        <span className={styles.experiencePeriod}>{item.period}</span>
+        {item.periodNote && <span className={styles.experiencePeriodNote}>{item.periodNote}</span>}
+        {item.isCurrent && item.status && (
+          <span className={styles.experienceStatus}>
+            <i /> {item.status}
+          </span>
+        )}
+      </div>
+      <div className={styles.experienceDetails}>
+        <p className={styles.experienceDescription}>{item.description}</p>
+        <ul className={styles.experienceContributions}>
+          {item.contributions.map((contribution) => (
+            <li key={contribution}>{contribution}</li>
+          ))}
+        </ul>
+        <div className={styles.experienceActions}>
+          {item.companyUrl && (
+            <a
+              className={styles.experienceAction}
+              href={item.companyUrl}
+              aria-label={'Visit ' + item.company + ' website'}
+              target='_blank'
+              rel={['noopener', 'noreferrer'].join(String.fromCharCode(32))}
+            >
+              Visit company website <ArrowUpRight size={15} aria-hidden />
+            </a>
+          )}
+          {item.projectUrl && (
+            <a className={styles.experienceAction} href={item.projectUrl}>
+              View Project <ArrowRight size={15} aria-hidden />
+            </a>
+          )}
+        </div>
+      </div>
+    </Reveal>
+  );
+
   return (
     <section id="experience" className={`${styles.section} ${styles.experienceSection}`}>
       <SectionHeading
@@ -700,56 +750,37 @@ function WorkExperience() {
         description='Experience across software development, web delivery, and business operations.'
       />
       <div className={styles.experienceList}>
-        {experiences.map((item, index) => (
-          <Reveal
-            key={item.id}
-            className={styles.experienceEntry}
-            delay={index * 0.07}
-          >
-            <p className={styles.experienceCompany}>{item.company}</p>
-            <h3 className={styles.experienceRole}>{item.role}</h3>
-            <div className={styles.experienceMeta}>
-              <span className={styles.experiencePeriod}>{item.period}</span>
-              {item.periodNote && <span className={styles.experiencePeriodNote}>{item.periodNote}</span>}
-              {item.isCurrent && item.status && (
-                <span className={styles.experienceStatus}>
-                  <i /> {item.status}
-                </span>
-              )}
-            </div>
-            <div className={styles.experienceDetails}>
-              <p className={styles.experienceDescription}>{item.description}</p>
-              <ul className={styles.experienceContributions}>
-                {item.contributions.map((contribution) => (
-                  <li key={contribution}>{contribution}</li>
-                ))}
-              </ul>
-              <div className={styles.experienceActions}>
-                {item.companyUrl && (
-                  <a
-                    className={styles.experienceAction}
-                    href={item.companyUrl}
-                    aria-label={'Visit ' + item.company + ' website'}
-                    target='_blank'
-                    rel={['noopener', 'noreferrer'].join(String.fromCharCode(32))}
-                  >
-                    Visit company website <ArrowUpRight size={15} aria-hidden />
-                  </a>
-              )}
-                {item.projectUrl && (
-                  <a className={styles.experienceAction} href={item.projectUrl}>
-                    View Project <ArrowRight size={15} aria-hidden />
-                  </a>
-                )}
-            </div>
-            </div>
-          </Reveal>
-        ))}
+        {experiences.slice(0, 2).map(renderExperience)}
+        <div
+          id="experience-additional"
+          className={styles.experienceExpandable}
+          aria-label="Additional work experience"
+          aria-hidden={!isExpanded}
+          inert={!isExpanded}
+        >
+          {isExpanded && experiences.slice(2).map(renderExperience)}
+        </div>
+      </div>
+      <div className={styles.experienceToggleWrap}>
+        <button
+          className={styles.experienceToggle}
+          type="button"
+          aria-expanded={isExpanded}
+          aria-controls="experience-additional"
+          aria-label={isExpanded ? "Show less work experience" : "Show more work experience"}
+          onClick={() => setIsExpanded((expanded) => !expanded)}
+        >
+          <span>{isExpanded ? "See less" : "See more"}</span>
+          {isExpanded ? (
+            <ChevronUp size={16} strokeWidth={2} aria-hidden="true" />
+          ) : (
+            <ChevronDown size={16} strokeWidth={2} aria-hidden="true" />
+          )}
+        </button>
       </div>
     </section>
   );
 }
-
 const logoMap: Record<string, ReactNode> = {
   python: <SiPython />,
   django: <SiDjango />,
@@ -939,7 +970,194 @@ function Contact() {
   );
 }
 
-function DetailModal({
+const INITIAL_CONTACT_DISPLAY_MS = 30_000;
+const INITIAL_CONTACT_FADE_MS = 350;
+const SCROLL_CONTACT_FADE_MS = 250;
+const CONTACT_EXIT_FADE_MS = 300;
+const SCROLL_IDLE_HIDE_MS = 1_500;
+
+type ContactInteractionState = {
+  hovered: boolean;
+  focused: boolean;
+  pressed: boolean;
+};
+
+export function FloatingContactActions() {
+  const email = identity.email.trim();
+  const whatsappHref = getWhatsAppHref(identity.whatsapp);
+  const hasContacts = Boolean(email || whatsappHref);
+  const reducedMotion = useReducedMotion();
+  const [isVisible, setIsVisible] = useState(true);
+  const [entranceDuration, setEntranceDuration] = useState(INITIAL_CONTACT_FADE_MS / 1000);
+  const visibilityRef = useRef(true);
+  const initialTimerRef = useRef<number | null>(null);
+  const scrollHideTimerRef = useRef<number | null>(null);
+  const isScrollingRef = useRef(false);
+  const initialPeriodRef = useRef(true);
+  const lastScrollEventTimeRef = useRef<number | null>(null);
+  const interactionRef = useRef<ContactInteractionState>({
+    hovered: false,
+    focused: false,
+    pressed: false,
+  });
+
+  const clearTimer = (timerRef: { current: number | null }) => {
+    if (timerRef.current === null) return;
+    window.clearTimeout(timerRef.current);
+    timerRef.current = null;
+  };
+
+  const interactionIsActive = () => {
+    const interaction = interactionRef.current;
+    return interaction.hovered || interaction.focused || interaction.pressed;
+  };
+
+  const setContactVisibility = (visible: boolean, duration = SCROLL_CONTACT_FADE_MS) => {
+    if (visibilityRef.current === visible) return;
+    visibilityRef.current = visible;
+    if (visible) setEntranceDuration(duration / 1000);
+    setIsVisible(visible);
+  };
+
+  const scheduleIdleHide = () => {
+    clearTimer(scrollHideTimerRef);
+    if (initialPeriodRef.current || isScrollingRef.current || interactionIsActive()) return;
+    scrollHideTimerRef.current = window.setTimeout(() => {
+      scrollHideTimerRef.current = null;
+      isScrollingRef.current = false;
+      if (!interactionIsActive()) setContactVisibility(false);
+    }, SCROLL_IDLE_HIDE_MS);
+  };
+
+  const handleScroll = (event: Event) => {
+    if (document.querySelector('[role="dialog"][aria-modal="true"]')) return;
+    if (event.timeStamp && lastScrollEventTimeRef.current === event.timeStamp) return;
+    lastScrollEventTimeRef.current = event.timeStamp;
+    initialPeriodRef.current = false;
+    clearTimer(initialTimerRef);
+    isScrollingRef.current = true;
+    clearTimer(scrollHideTimerRef);
+    setContactVisibility(true, SCROLL_CONTACT_FADE_MS);
+    scrollHideTimerRef.current = window.setTimeout(() => {
+      scrollHideTimerRef.current = null;
+      isScrollingRef.current = false;
+      if (!interactionIsActive()) setContactVisibility(false);
+    }, SCROLL_IDLE_HIDE_MS);
+  };
+
+  const handleInteractionStart = () => {
+    clearTimer(scrollHideTimerRef);
+    isScrollingRef.current = false;
+  };
+
+  const handleInteractionEnd = () => {
+    if (interactionIsActive()) return;
+    scheduleIdleHide();
+  };
+
+  useEffect(() => {
+    if (!hasContacts) return;
+
+    initialTimerRef.current = window.setTimeout(() => {
+      initialTimerRef.current = null;
+      initialPeriodRef.current = false;
+      if (!isScrollingRef.current && !interactionIsActive()) setContactVisibility(false);
+    }, INITIAL_CONTACT_DISPLAY_MS);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    document.addEventListener("scroll", handleScroll, { passive: true, capture: true });
+
+    return () => {
+      clearTimer(initialTimerRef);
+      clearTimer(scrollHideTimerRef);
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("scroll", handleScroll, true);
+    };
+  }, []);
+
+  if (!hasContacts) return null;
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.nav
+          key="floating-contact-actions"
+          className={styles.floatingContact}
+          aria-label="Quick contact actions"
+          aria-hidden={!isVisible}
+          inert={!isVisible}
+          initial={reducedMotion ? { opacity: 1 } : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{
+            opacity: 0,
+            pointerEvents: "none",
+            transition: { duration: reducedMotion ? 0 : CONTACT_EXIT_FADE_MS / 1000, ease: "easeOut" },
+          }}
+          transition={{ duration: reducedMotion ? 0 : entranceDuration, ease: "easeOut" }}
+          style={{ pointerEvents: isVisible ? "auto" : "none" }}
+          onPointerEnter={() => {
+            interactionRef.current.hovered = true;
+            handleInteractionStart();
+          }}
+          onPointerLeave={() => {
+            interactionRef.current.hovered = false;
+            handleInteractionEnd();
+          }}
+          onPointerDown={() => {
+            interactionRef.current.pressed = true;
+            handleInteractionStart();
+          }}
+          onPointerUp={() => {
+            interactionRef.current.pressed = false;
+            handleInteractionEnd();
+          }}
+          onPointerCancel={() => {
+            interactionRef.current.pressed = false;
+            handleInteractionEnd();
+          }}
+          onFocusCapture={() => {
+            interactionRef.current.focused = true;
+            handleInteractionStart();
+          }}
+          onBlurCapture={(event) => {
+            if (event.currentTarget.contains(event.relatedTarget as Node | null)) return;
+            interactionRef.current.focused = false;
+            handleInteractionEnd();
+          }}
+        >
+          {whatsappHref && (
+            <a
+              className={`${styles.floatingContactLink} ${styles.floatingContactWhatsapp}`}
+              href={whatsappHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="WhatsApp me"
+              title="WhatsApp me"
+            >
+              <span className={`${styles.floatingContactIcon} ${styles.floatingContactWhatsappIcon}`} aria-hidden="true">
+                <FaWhatsapp size={18} />
+              </span>
+              <span>WhatsApp me</span>
+            </a>
+          )}
+          {email && (
+            <a
+              className={`${styles.floatingContactLink} ${styles.floatingContactEmail}`}
+              href={`mailto:${email}`}
+              aria-label="Email me"
+              title="Email me"
+            >
+              <span className={`${styles.floatingContactIcon} ${styles.floatingContactEmailIcon}`} aria-hidden="true">
+                <img src="/assets/gmail-logo.svg" alt="" width="19" height="19" />
+              </span>
+              <span>Email me</span>
+            </a>
+          )}
+        </motion.nav>
+      )}
+    </AnimatePresence>
+  );
+}function DetailModal({
   detail,
   onClose,
 }: {
@@ -1052,7 +1270,7 @@ function DetailModal({
                   ))}
                 </div>
                 <div className={styles.modalEnd}>
-                  — END OF NOTE <span>zoe..</span>
+                  END OF NOTE <span>zoe..</span>
                 </div>
               </div>
             )}
@@ -1267,10 +1485,10 @@ export function ProjectsArchive() {
   const [filter, setFilter] = useState<ProjectStatus | "all">("all");
   const visibleProjects = filter === "all" ? projects : projects.filter((project) => project.statusType === filter);
   useEffect(() => {
-    document.title = "Projects — zoe..";
+    document.title = "Projects | zoe..";
     const description = document.querySelector('meta[name="description"]');
     description?.setAttribute("content", "A collection of software projects, business websites, digital experiences, and products in development by zoe..");
-    return () => { document.title = "zoe.. — Software & business technology"; };
+    return () => { document.title = "zoe.. | Software & business technology"; };
   }, []);
   return (
     <div className={styles.archivePage}>
@@ -1308,13 +1526,13 @@ export function ProjectCaseStudy({ slug }: { slug: string }) {
   const project = projects.find((item) => item.slug === slug);
   useEffect(() => {
     if (!project) {
-      document.title = "Project not found — zoe..";
+      document.title = "Project not found | zoe..";
       return;
     }
-    document.title = `${project.title} — zoe..`;
+    document.title = `${project.title} | zoe..`;
     const description = document.querySelector('meta[name="description"]');
     description?.setAttribute("content", project.short);
-    return () => { document.title = "zoe.. — Software & business technology"; };
+    return () => { document.title = "zoe.. | Software & business technology"; };
   }, [project]);
   if (!project) return <ProjectNotFound />;
   const index = projects.findIndex((item) => item.id === project.id);

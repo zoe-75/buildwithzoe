@@ -1,5 +1,5 @@
 /**
- * Content source for zoe.. — edit this file to personalize the website.
+ * Content source for zoe... Edit this file to personalize the website.
  * Only projects and facts previously described by Zoe are included. Any missing
  * public links, case-study evidence, and contact details are intentionally blank.
  */
